@@ -271,8 +271,8 @@ code {
     border-right: 1px solid var(--line);
     overflow-y: auto;
     position: sticky;
-    top: 46px;
-    max-height: calc(100vh - 46px);
+    top: 48px;
+    max-height: calc(100vh - 48px);
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -1260,6 +1260,9 @@ math-field::part(menu-toggle) {
 /* ═══════════════════════════════════════ */
 /* DRAWER (MENÚ LATERAL) */
 /* ═══════════════════════════════════════ */
+/* ═══════════════════════════════════════ */
+/* DRAWER (MENÚ LATERAL / BARRA LATERAL) */
+/* ═══════════════════════════════════════ */
 .drawer-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.5);
@@ -1271,32 +1274,161 @@ math-field::part(menu-toggle) {
 .drawer-overlay.open {
     opacity: 1; pointer-events: auto;
 }
-.app-drawer {
-    position: fixed; top: 0; left: -280px; width: 280px; height: 100vh;
-    background: var(--panel-2);
-    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-    z-index: 1001;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex; flex-direction: column;
+
+/* Comportamiento por defecto en Escritorio (>960px) */
+@media (min-width: 961px) {
+    .app-drawer {
+        position: sticky;
+        top: 48px;
+        left: 0;
+        width: 60px; /* Colapsado por defecto */
+        height: calc(100vh - 48px);
+        background: var(--panel-2);
+        border-right: 1px solid var(--line);
+        box-shadow: none;
+        z-index: 99;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        overflow-x: hidden;
+    }
+    .app-drawer.open {
+        width: 240px; /* Expandido */
+    }
+    .drawer-header {
+        display: none; /* Ocultar cabecera con botón de cerrar en escritorio */
+    }
+    .drawer-menu {
+        list-style: none;
+        padding: 10px 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .drawer-item {
+        width: 100%;
+        background: transparent;
+        border: none;
+        padding: 12px;
+        font-size: 0.9rem;
+        color: var(--text-dim);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        overflow: hidden;
+        white-space: nowrap;
+        border-left: 4px solid transparent;
+        border-radius: 0px;
+    }
+    .drawer-item:hover {
+        background: var(--panel-3);
+        color: var(--text);
+    }
+    .drawer-item.active {
+        background: var(--teal-dim);
+        color: var(--teal);
+        border-left: 4px solid var(--teal);
+        padding-left: 8px; /* Ajuste por el borde izquierdo */
+    }
+    .drawer-item .mode-icon {
+        width: 32px;
+        min-width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-align: center;
+    }
+    .drawer-item .mode-text {
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        pointer-events: none;
+    }
+    .app-drawer.open .drawer-item .mode-text {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
-.app-drawer.open {
-    left: 0;
+
+/* Comportamiento responsivo en Móvil (<=960px) */
+@media (max-width: 960px) {
+    .app-drawer {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100vh;
+        background: var(--panel-2);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        z-index: 1001;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+    }
+    .app-drawer.open {
+        left: 0;
+    }
+    .drawer-header {
+        height: 48px;
+        padding: 0 15px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .drawer-header h2 {
+        font-size: 1rem;
+        color: var(--text);
+        font-weight: 500;
+    }
+    .drawer-menu {
+        list-style: none;
+        padding: 10px 0;
+        margin: 0;
+    }
+    .drawer-item {
+        width: 100%;
+        text-align: left;
+        background: transparent;
+        border: none;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+        color: var(--text-dim);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: 0px;
+    }
+    .drawer-item:hover {
+        background: var(--panel-3);
+        color: var(--text);
+    }
+    .drawer-item.active {
+        background: var(--teal-dim);
+        color: var(--teal);
+        border-left: 4px solid var(--teal);
+        padding-left: 16px;
+    }
+    .drawer-item .mode-icon {
+        display: inline-flex;
+        width: 24px;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+    .drawer-item .mode-text {
+        display: inline;
+    }
 }
-.drawer-header {
-    height: 48px; padding: 0 15px; border-bottom: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: space-between;
-}
-.drawer-header h2 { font-size: 1rem; color: var(--text); font-weight: 500; }
-.drawer-menu {
-    list-style: none; padding: 10px 0; margin: 0;
-}
-.drawer-item {
-    width: 100%; text-align: left; background: transparent; border: none;
-    padding: 12px 20px; font-size: 0.9rem; color: var(--text-dim);
-    cursor: pointer; transition: all 0.2s; font-weight: 500;
-}
-.drawer-item:hover { background: var(--panel-3); color: var(--text); }
-.drawer-item.active { background: var(--teal-dim); color: var(--teal); border-left: 4px solid var(--teal); padding-left: 16px; }
 
 .formula-box.did-result {
     font-size: .88rem;
@@ -1748,22 +1880,42 @@ math-field::part(menu-toggle) {
     </div>
 </header>
 
-<!-- Menú Lateral (Drawer) -->
+<!-- Menú Lateral (Drawer / Sidebar) -->
 <div class="drawer-overlay" id="drawerOverlay"></div>
-<nav class="app-drawer" id="appDrawer">
-    <div class="drawer-header">
-        <h2>Módulos</h2>
-        <button class="icon-btn" id="menuCloseBtn" title="Cerrar menú">✕</button>
-    </div>
-    <ul class="drawer-menu">
-        <li><button class="drawer-item active" data-mode="riemann">Sumas de Riemann</button></li>
-        <li><button class="drawer-item" data-mode="imagearea">Área por Imágenes</button></li>
-        <li><button class="drawer-item" data-mode="derivative">Derivadas</button></li>
-        <li><button class="drawer-item" data-mode="integral">Integrales Exactas</button></li>
-    </ul>
-</nav>
 
 <div class="container">
+    <nav class="app-drawer" id="appDrawer">
+        <div class="drawer-header">
+            <h2>Módulos</h2>
+            <button class="icon-btn" id="menuCloseBtn" title="Cerrar menú">✕</button>
+        </div>
+        <ul class="drawer-menu">
+            <li>
+                <button class="drawer-item active" data-mode="riemann">
+                    <span class="mode-icon">Σ</span>
+                    <span class="mode-text">Sumas de Riemann</span>
+                </button>
+            </li>
+            <li>
+                <button class="drawer-item" data-mode="imagearea">
+                    <span class="mode-icon">🖼️</span>
+                    <span class="mode-text">Área por Imágenes</span>
+                </button>
+            </li>
+            <li>
+                <button class="drawer-item" data-mode="derivative">
+                    <span class="mode-icon">d/dx</span>
+                    <span class="mode-text">Derivadas</span>
+                </button>
+            </li>
+            <li>
+                <button class="drawer-item" data-mode="integral">
+                    <span class="mode-icon">∫</span>
+                    <span class="mode-text">Integrales Exactas</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
 
     <!-- ═══════════════════════════════════════ -->
     <!-- PANEL IZQUIERDO — Controles            -->
@@ -22270,31 +22422,37 @@ infiniteCheck.addEventListener('change', () => {
 /* -- Evento Paste: detectar y convertir LaTeX autom�ticamente -- */
 // -- DRAWER LOGIC --
 function closeDrawer() {
-    appDrawer.classList.remove('open');
-    drawerOverlay.classList.remove('open');
+    if (window.innerWidth <= 960) {
+        appDrawer.classList.remove('open');
+        drawerOverlay.classList.remove('open');
+    }
 }
 menuToggleBtn.addEventListener('click', () => {
-    appDrawer.classList.add('open');
-    drawerOverlay.classList.add('open');
+    if (window.innerWidth <= 960) {
+        appDrawer.classList.add('open');
+        drawerOverlay.classList.add('open');
+    } else {
+        appDrawer.classList.toggle('open');
+    }
 });
 menuCloseBtn.addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
 
 drawerItems.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        const mode = e.target.getAttribute('data-mode');
+        const mode = btn.getAttribute('data-mode');
         if (!mode) return;
         currentMode = mode;
         
         // Update active class
         drawerItems.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
+        btn.classList.add('active');
         
         // Update header subtitle
-        if (mode === 'riemann') appSubtitle.textContent = 'Aproximaci�n Visual de Integrales Definidas';
-        if (mode === 'derivative') appSubtitle.textContent = 'C�lculo Simb�lico de Derivadas';
-        if (mode === 'integral') appSubtitle.textContent = 'C�lculo Simb�lico de Integrales Exactas';
-        if (mode === 'imagearea') appSubtitle.textContent = 'Laboratorio de �rea de Superficie';
+        if (mode === 'riemann') appSubtitle.textContent = 'Aproximacin Visual de Integrales Definidas';
+        if (mode === 'derivative') appSubtitle.textContent = 'Clculo Simblico de Derivadas';
+        if (mode === 'integral') appSubtitle.textContent = 'Clculo Simblico de Integrales Exactas';
+        if (mode === 'imagearea') appSubtitle.textContent = 'Laboratorio de rea de Superficie';
 
         // Update mode badge
         const modeBadge = document.getElementById('modeBadge');
