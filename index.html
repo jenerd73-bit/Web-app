@@ -21509,6 +21509,12 @@ function actualizarHintTeclado() {
  * de prioridad que el teclado de texto: m�s usados primero.
  */
 function configurarTecladoMathLive() {
+    // Configurar la ruta de las fuentes matemáticas desde CDN de jsDelivr si no se ejecuta en Neutralino
+    if (typeof window.MathfieldElement !== 'undefined') {
+        if (typeof window.Neutralino === 'undefined') {
+            window.MathfieldElement.fontsDirectory = 'https://cdn.jsdelivr.net/npm/mathlive@0.109.2/dist/fonts';
+        }
+    }
     const vkb = window.mathVirtualKeyboard;
     if (!vkb) return;
     
